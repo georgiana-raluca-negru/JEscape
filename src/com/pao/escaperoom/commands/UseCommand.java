@@ -1,4 +1,9 @@
 package com.pao.escaperoom.commands;
 
-public class UseCommand {
+import com.pao.escaperoom.model.GameSession;
+
+public class UseCommand implements Command{
+    public String execute(GameSession session, String[] args){
+
+    }
 }

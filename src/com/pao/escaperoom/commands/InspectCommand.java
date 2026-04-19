@@ -1,4 +1,9 @@
 package com.pao.escaperoom.commands;
 
-public class InspectCommand {
+import com.pao.escaperoom.model.GameSession;
+
+public class InspectCommand implements Command{
+    public String execute(GameSession session, String[] args){
+
+    }
 }

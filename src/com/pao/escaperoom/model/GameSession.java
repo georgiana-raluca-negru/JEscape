@@ -63,6 +63,20 @@ public class GameSession {
         this.inventory.remove(item);
     }
 
+    public Item findItemByName(String objectName){
+        if(objectName == null || inventory == null){
+            return null;
+        }
+
+        for(Item object : inventory){
+            if(object.getName().equalsIgnoreCase(objectName.trim())){
+                return object;
+            }
+        }
+
+        return null;
+    }
+
     // change the cuurent location towards a direction
     public String movePlayer(Direction direction) {
         Location nextLocation = currentLocation.getExit(direction);

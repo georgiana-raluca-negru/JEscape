@@ -58,6 +58,20 @@ public class Location {
         return visibleObjects;
     }
 
+    public GameObject findObjectByName(String objectName){
+        if(objectName == null || visibleObjects == null){
+            return null;
+        }
+
+        for(GameObject object : visibleObjects){
+            if(object.getName().equalsIgnoreCase(objectName.trim())){
+                return object;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Location{" +
