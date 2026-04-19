@@ -1,19 +1,21 @@
 package com.pao.escaperoom.model;
 
-public class GameResult {
-    private PlayerProfile player;
-    private GameMap map;
-    private Difficulty difficulty;
+import com.pao.escaperoom.commands.Command;
 
-    private boolean isWin;
-    private long timeTakenSeconds;
+public final class GameResult implements Comparable<GameResult> {
+    private final String playerName;
+    private final String mapName;
+    private final Difficulty difficulty;
 
-    public GameResult(PlayerProfile player, long timeTakenSeconds, boolean isWin, GameMap map, Difficulty difficulty) {
-        this.player = player;
-        this.timeTakenSeconds = timeTakenSeconds;
-        this.isWin = isWin;
-        this.map = map;
+    private final boolean isWin;
+    private final long timeTakenSeconds;
+
+    public GameResult(String playerName, String mapName, Difficulty difficulty, boolean isWin, long timeTakenSeconds) {
+        this.playerName = playerName;
+        this.mapName = mapName;
         this.difficulty = difficulty;
+        this.isWin = isWin;
+        this.timeTakenSeconds = timeTakenSeconds;
     }
 
     // aici e vorba de niste puncte pe care le capat pe parcursul seisunii?
@@ -31,6 +33,50 @@ public class GameResult {
         double total = (basePoints + timeBonus)* difficulty.getMultiplier();
 
         return total;
+    }
 
+    @Override
+    public int compareTo(GameResult other) {
+        double myPoints = this.calculatePoints();
+        double otherPoints = other.calculatePoints();
+
+        int result = Double.compare(otherPoints, myPoints);
+
+        if (result == 0) {
+            return this.playerName.compareTo(other.playerName);
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GameResult{" +
+                "player='" + playerName + '\'' +
+                ", map='" + mapName + '\'' +
+                ", difficulty=" + difficulty +
+                ", result=" + (isWin ? "ESCAPED" : "DIED") +
+                ", time=" + timeTakenSeconds + "s" +
+                ", SCORE=" + calculatePoints() +
+                '}';
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public boolean isWin() {
+        return isWin;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public long getTimeTakenSeconds() {
+        return timeTakenSeconds;
     }
 }

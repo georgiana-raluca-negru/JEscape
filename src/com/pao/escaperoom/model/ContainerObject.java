@@ -2,7 +2,6 @@ package com.pao.escaperoom.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ContainerObject extends  LockableObject implements Storable {
     private List<Storable> contents;
@@ -14,8 +13,8 @@ public class ContainerObject extends  LockableObject implements Storable {
 
     @Override
     public String examine(){
-        String message = description;
-        if(isLocked){
+        String message = this.getDescription();
+        if(this.isLocked()){
             message += " It is firmly locked.";
         }
         else if(contents.isEmpty()){
@@ -26,6 +25,7 @@ public class ContainerObject extends  LockableObject implements Storable {
             for(Storable object: contents){
                 message += object.getName() + ", ";
             }
+            message = message.substring(0, message.length() - 2) + ".";
         }
         return message;
     }
@@ -34,5 +34,20 @@ public class ContainerObject extends  LockableObject implements Storable {
         contents.add(object);
     }
 
+    @Override
+    public String toString() {
+        return "ContainerObject{" +
+                "name='" + getName() + '\'' +
+                ", isLocked=" + isLocked() +
+                ", contentsCount=" + contents.size() +
+                '}';
+    }
 
+    public List<Storable> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<Storable> contents) {
+        this.contents = contents;
+    }
 }

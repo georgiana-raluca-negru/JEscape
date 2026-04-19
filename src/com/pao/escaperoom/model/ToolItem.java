@@ -11,7 +11,7 @@ public class ToolItem extends Item {
     @Override
     public String examine(){
         String type = isConsumedOnUse ? "consumable." : "reusable.";
-        return description + " It is " + type;
+        return this.getDescription() + " It is " + type;
     }
 
     @Override
@@ -30,5 +30,21 @@ public class ToolItem extends Item {
 
         }
         return "You cannot use " + this.getName() + " on " + target.getName() + ".";
+    }
+
+    @Override
+    public String toString() {
+        return "ToolItem{" +
+                "name='" + getName() + '\'' +
+                ", isConsumedOnUse=" + isConsumedOnUse +
+                '}';
+    }
+
+    public boolean isConsumedOnUse() {
+        return isConsumedOnUse;
+    }
+
+    public void setConsumedOnUse(boolean consumedOnUse) {
+        isConsumedOnUse = consumedOnUse;
     }
 }

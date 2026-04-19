@@ -6,32 +6,47 @@ import java.util.Map;
 
 // o harta se naste din a avea deja niste locatii in ea ca atfel nu ar avea sens
 // totusi cred ca ar fi mai ok sa o fac pe asta clasa finala?
+// asta am facut o imutabila si fac direct lista
 
-public class GameMap {
+public final class GameMap {
     private final String name;
     private final String description;
 
-    private List<Location> locations;
-    private Location startingLocation;
+    private final List<Location> locations;
+    private final Location startingLocation;
 
-    public GameMap(String name, String description) {
+    public GameMap(String name, String description, List<Location> locations, Location startingLocation) {
         this.name = name;
         this.description = description;
 
-        this.locations = new ArrayList<>();
-        this.startingLocation = null;
-    }
-
-    // daca veau sa adaug o locatie in harta
-    public void addLocation(Location location){
-        this.locations.add(location);
-    }
-
-    public void setStartingLocation(Location location){
-        this.startingLocation = location;
+        this.locations = new ArrayList<>(locations);
+        this.startingLocation = startingLocation;
     }
 
     public Location getStartingLocation() {
         return startingLocation;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<Location> getLocations() {
+        return new ArrayList<>(this.locations);
+    }
+
+    @Override
+    public String toString() {
+        return "GameMap{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", numberOfLocations=" + locations.size() +
+                ", startingLocation=" + startingLocation.getName() +
+                '}';
+    }
+
 }

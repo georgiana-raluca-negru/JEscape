@@ -34,6 +34,7 @@ public enum Direction {
                 return dir;
             }
         }
+
         return null;
     }
 

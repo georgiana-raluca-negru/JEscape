@@ -24,4 +24,20 @@ public abstract class LockableObject extends GameObject implements Interactable{
 
         return false;
     }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public String getRequiredItemName() {
+        return requiredItemName;
+    }
+
+    public void setRequiredItemName(String requiredItemName) {
+        this.requiredItemName = requiredItemName;
+    }
 }

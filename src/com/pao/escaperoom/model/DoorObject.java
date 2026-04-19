@@ -12,15 +12,29 @@ public class DoorObject extends LockableObject{
         return destination;
     }
 
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
     @Override
     public String examine(){
-        String message = description;
-        if(isLocked){
-            message += " It is locked.";
+        String message = this.getDestination();
+        if(this.isLocked()){
+            message += "It is locked.";
         }
         else {
             message += "It is unlocked and slightly open, leading to " + destination + ".";
         }
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "DoorObject{" +
+                "name='" + getName() + '\'' +
+                ", isLocked=" + isLocked() +
+                ", destination='" + destination + '\'' +
+                '}';
+    }
+
 }

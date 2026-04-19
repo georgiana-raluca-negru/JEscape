@@ -14,7 +14,7 @@ public class Location {
     private Map<Direction, Location> exits;
     private List<GameObject> visibleObjects;
 
-    public Location(String name, String description, List<GameObject> visibleObjects) {
+    public Location(String name, String description) {
         this.name = name;
         this.description = description;
 
@@ -56,5 +56,14 @@ public class Location {
 
     public List<GameObject> getVisibleObjects() {
         return visibleObjects;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "name='" + name + '\'' +
+                ", numberOfExits=" + exits.size() +
+                ", visibleObjects=" + visibleObjects +
+                '}';
     }
 }

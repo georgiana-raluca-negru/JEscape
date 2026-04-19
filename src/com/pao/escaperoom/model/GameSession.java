@@ -38,10 +38,6 @@ public class GameSession {
         startTime = LocalDateTime.now();
     }
 
-//    public void finishGame(){
-//
-//    }
-
     // seconds spent gaming
     public  long getElapsedSeconds() {
         if (startTime == null){
@@ -53,8 +49,18 @@ public class GameSession {
     }
 
     public boolean hasTimeExpired() {
-        long limitSeconds = difficulty.getTimeLimitMinutes() * 60;
+        long limitSeconds = difficulty.getTimeLimitMinutes() * 60L;
         return getElapsedSeconds() >= limitSeconds;
+    }
+
+    public void addItemToInventory(Item item) {
+        if (!isGameOver) {
+            this.inventory.add(item);
+        }
+    }
+
+    public void removeItemFromInventory(Item item) {
+        this.inventory.remove(item);
     }
 
     // change the cuurent location towards a direction
@@ -70,17 +76,18 @@ public class GameSession {
         return "You have moved.";
     }
 
-    public GameResult finishGame(boolean ceva){
+    public GameResult finishGame(boolean hasEscaped){
         this.isGameOver = true;
         long timeTaken = getElapsedSeconds();
 
         GameResult result = new GameResult(
-                this.player,
-                timeTaken,
-                ceva,
-                this.map,
-                this.difficulty
+                this.player.getUsername(),
+                this.map.getName(),
+                this.difficulty,
+                hasEscaped,
+                timeTaken
         );
+
         return result;
     }
 
@@ -114,5 +121,17 @@ public class GameSession {
 
     public boolean isWon() {
         return isWon;
+    }
+
+    @Override
+    public String toString() {
+        return "GameSession{" +
+                "player=" + player.getUsername() +
+                ", map=" + map.getName() +
+                ", difficulty=" + difficulty +
+                ", currentLocation=" + currentLocation.getName() +
+                ", isGameOver=" + isGameOver +
+                ", inventorySize=" + inventory.size() +
+                '}';
     }
 }
