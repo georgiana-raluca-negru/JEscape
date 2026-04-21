@@ -11,10 +11,13 @@ public class CommandParser {
 
     public CommandParser(){
         commands.put("move", new MoveCommand());
+        commands.put("go", new MoveCommand());
         commands.put("take", new TakeCommand());
         commands.put("use", new UseCommand());
         commands.put("inspect", new InspectCommand());
         commands.put("drop", new DropCommand());
+        commands.put("help", new HelpCommand());
+        commands.put("?", new HelpCommand());
     }
 
     public String parseAndExecute(GameSession session, String input){

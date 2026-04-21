@@ -13,14 +13,14 @@ public class DropCommand implements Command{
 
         String objectName = String.join(" ", args);
         Location currentLocation = session.getCurrentLocation();
-        Item object = session.findItemByName(objectName);
+        Item itemToDrop = session.findItemByName(objectName);
 
-        if(object == null){
+        if(itemToDrop == null){
             return "There is no item named " + objectName + " in your inventory.";
         }
-        currentLocation.addObject(object);
-        session.removeItemFromInventory(object);
+        currentLocation.addObject(itemToDrop);
+        session.removeItemFromInventory(itemToDrop);
 
-        return "You dropped " + object.getName() + " on the floor.";
+        return "You dropped " + itemToDrop.getName() + " on the floor.";
     }
 }

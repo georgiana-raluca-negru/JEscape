@@ -16,11 +16,10 @@ public class TakeCommand implements Command {
         GameObject obj = currentLocation.findObjectByName(objectName);
 
         if(obj == null){
-            return "There is no " + obj.getName() + " in this location.";
+            return "There is no " + objectName + " in this location.";
         }
 
-        if(obj instanceof Item){
-            Item itemToTake = (Item) obj;
+        if(obj instanceof Item itemToTake){
             currentLocation.removeObject(obj);
             session.addItemToInventory(itemToTake);
 
