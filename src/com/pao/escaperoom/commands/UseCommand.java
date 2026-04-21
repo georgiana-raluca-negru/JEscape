@@ -44,6 +44,10 @@ public class UseCommand implements Command{
 
         boolean succes = target.interactWith(tool);
         if (succes) {
+            if(tool.isConsumedOnUse()){
+                session.removeItemFromInventory(tool);
+                return "You have successfully used the " + tool.getName() + " on the " + targetObject.getName() + ". The " + tool.getName() + " breaks/is consumed in the process!";
+            }
             return "You have successfullt used the " + tool.getName() + " on the " + targetObject.getName() + ". It is now unlocked!";
         } else {
             return "You try to use the " + tool.getName() + " on the " + targetObject.getName() + ", but nothing happens. (Maybe it's the wrong tool, or it's already unlocked?).";

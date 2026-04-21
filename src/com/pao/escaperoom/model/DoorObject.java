@@ -2,10 +2,12 @@ package com.pao.escaperoom.model;
 
 public class DoorObject extends LockableObject{
     private String destination;
+    private boolean isFinalExit;
 
-    public DoorObject(String name, String description, boolean isLocked, String requiredItemName, String destination){
+    public DoorObject(String name, String description, boolean isLocked, String requiredItemName, String destination, boolean isFinalExit){
         super(name, description, isLocked, requiredItemName);
         this.destination = destination;
+        this.isFinalExit = isFinalExit;
     }
 
     public String getDestination(){
@@ -14,6 +16,10 @@ public class DoorObject extends LockableObject{
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public boolean isFinalExit(){
+        return isFinalExit;
     }
 
     @Override

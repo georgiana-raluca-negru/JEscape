@@ -35,6 +35,7 @@ public class GameSession {
     // pornesc jocul
     // practic o sa am oleaca de story pana sa incep si apoi dupa o sa mi pornesc timpul pentru sesiune
     public void start(){
+
         startTime = LocalDateTime.now();
     }
 
@@ -54,7 +55,7 @@ public class GameSession {
     }
 
     public void addItemToInventory(Item item) {
-        if (!isGameOver) {
+        if (!isGameOver()) {
             this.inventory.add(item);
         }
     }
@@ -87,11 +88,12 @@ public class GameSession {
 
         this.currentLocation = nextLocation;
 
-        return "You have moved.";
+        return "You head " + direction.name().toLowerCase() + " into the " + currentLocation.getName() + ".\n\n";
     }
 
     public GameResult finishGame(boolean hasEscaped){
         this.isGameOver = true;
+        this.isWon = hasEscaped;
         long timeTaken = getElapsedSeconds();
 
         GameResult result = new GameResult(
@@ -130,12 +132,14 @@ public class GameSession {
     }
 
     public boolean isGameOver() {
-        return isGameOver;
+        return isGameOver || isWon || hasTimeExpired();
     }
 
     public boolean isWon() {
         return isWon;
     }
+
+    public void setIsWon(boolean gameWon){ this.isWon = gameWon; }
 
     @Override
     public String toString() {

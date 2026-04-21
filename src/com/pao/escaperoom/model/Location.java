@@ -55,7 +55,7 @@ public class Location {
     }
 
     public List<GameObject> getVisibleObjects() {
-        return visibleObjects;
+        return new ArrayList<>(this.visibleObjects);
     }
 
     public GameObject findObjectByName(String objectName){

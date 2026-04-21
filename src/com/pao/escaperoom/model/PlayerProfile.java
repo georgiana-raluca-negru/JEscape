@@ -7,16 +7,14 @@ import java.util.List;
 public class PlayerProfile {
     private String username;
     private String email;
-    private String passwordHash;
     private final LocalDate registrationDate;
 
     private List<GameResult> gameHistory;
 
-    public PlayerProfile(String username, String email, LocalDate registrationDate, String passwordHash) {
+    public PlayerProfile(String username, String email) {
         this.username = username;
         this.email = email;
-        this.registrationDate = registrationDate;
-        this.passwordHash = passwordHash;
+        this.registrationDate = LocalDate.now();
 
         this.gameHistory = new ArrayList<>();
     }
@@ -39,14 +37,6 @@ public class PlayerProfile {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public LocalDate getRegistrationDate() {
