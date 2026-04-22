@@ -3,6 +3,7 @@ package com.pao.escaperoom.service;
 import com.pao.escaperoom.exception.EmailTakenException;
 import com.pao.escaperoom.exception.UsernameTakenException;
 import com.pao.escaperoom.model.PlayerProfile;
+import com.pao.escaperoom.model.PlayerTitle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,17 @@ public class PlayerService {
         else {
             return playersByUsername.get(identifier);
         }
+    }
+
+    public boolean updatePlayerTitle(String identifier, PlayerTitle newTitle){
+        PlayerProfile player = findPlayer(identifier);
+
+        if(player == null || newTitle == null){
+            return  false;
+        }
+
+        player.setTitle(newTitle);
+        return true;
     }
 
     public boolean deletePlayer(String identifier){

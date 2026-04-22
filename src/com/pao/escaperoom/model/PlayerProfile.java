@@ -5,16 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerProfile {
-    private String username;
-    private String email;
-    private final LocalDate registrationDate;
+    private final String username;
+    private final String email;
+    private PlayerTitle title;
 
-    private List<GameResult> gameHistory;
+    private final LocalDate registrationDate;
+    private final List<GameResult> gameHistory;
 
     public PlayerProfile(String username, String email) {
         this.username = username;
         this.email = email;
         this.registrationDate = LocalDate.now();
+        this.title = PlayerTitle.ROOKIE;
 
         this.gameHistory = new ArrayList<>();
     }
@@ -29,18 +31,9 @@ public class PlayerProfile {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getEmail() {
 
         return email;
-    }
-
-    public void setEmail(String email) {
-
-        this.email = email;
     }
 
     public LocalDate getRegistrationDate() {
@@ -48,12 +41,12 @@ public class PlayerProfile {
         return registrationDate;
     }
 
-    public List<GameResult> getGameHistory() {
-        return new ArrayList<>(this.gameHistory);
+    public PlayerTitle getTitle() {
+        return title;
     }
 
-    public void setGameHistory(List<GameResult> gameHistory) {
-        this.gameHistory = gameHistory;
+    public void setTitle(PlayerTitle title) {
+        this.title = title;
     }
 
     @Override

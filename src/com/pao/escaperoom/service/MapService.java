@@ -49,40 +49,115 @@ public class MapService {
     }
 
     private void initializeMaps() {
-        // --- LOCAȚII ---
-        Location cell = new Location("Prison Cell", "O celulă umedă și rece. Pereții sunt plini de mușchi.");
-        Location hallway = new Location("Dark Hallway", "Un coridor lung luminat de torțe care pârâie.");
-        Location freedom = new Location("Freedom", "Ești în afara castelului. Aerul nopții este proaspăt.");
+        // ==========================================
+        // MAP 1: SPACE STATION ALPHA (Sci-Fi)
+        // ==========================================
+        Location airlock = new Location("Airlock", "Red emergency lights are flashing. Oxygen levels are dropping.");
+        Location controlRoom = new Location("Control Room", "A room full of dead monitors and floating debris.");
+        Location escapePod = new Location("Escape Pod", "Safety at last. The stars await.");
 
-        // --- OBIECTE ȘI PUZZLE ---
-        // 1. O notă în celulă
-        ClueItem note = new ClueItem("Bilet vechi", "O bucată de hârtie îngălbenită.", "Cheia de aur este singura care te scoate de aici!");
-        cell.addObject(note);
+        // Objects in Airlock
+        ToolItem crowbar = new ToolItem("Heavy Crowbar", "A solid titanium crowbar.", false);
+        ContainerObject locker = new ContainerObject("Rusty Locker", "A jammed crew locker.", true, "Heavy Crowbar");
+        ToolItem accessCard = new ToolItem("Access Card", "A blue keycard belonging to the captain.", true);
+        locker.addInside(accessCard); // Punem cardul ÎN dulap
 
-        // 2. Cheia pentru prima ușă (pusă direct pe jos în celulă pentru testare rapidă)
-        ToolItem rustyKey = new ToolItem("Cheie Ruginită", "O cheie veche din fier.", true);
-        cell.addObject(rustyKey);
+        DoorObject blastDoor = new DoorObject("Blast Door", "A heavy automated door.", true, "Access Card", "Control Room", false);
 
-        // 3. Cheia de aur pentru ieșirea finală (pusă în Hallway)
-        ToolItem goldenKey = new ToolItem("Cheie de Aur", "O cheie strălucitoare și grea.", true);
-        hallway.addObject(goldenKey);
+        airlock.addObject(crowbar);
+        airlock.addObject(locker);
+        airlock.addObject(blastDoor);
 
-        // --- UȘI ---
-        // Ușa dintre Cell și Hallway (încuiată cu rusty key)
-        DoorObject cellDoor = new DoorObject("Ușa Celulei", "O ușă grea din fier.", true, "Cheie Ruginită", "Dark Hallway", false);
-        cell.addObject(cellDoor);
+        // Objects in Control Room
+        ClueItem terminalLog = new ClueItem("Terminal Monitor", "A flickering screen.", "WARNING: Pod requires the Override Chip to launch.");
+        ToolItem overrideChip = new ToolItem("Override Chip", "A small golden microchip.", true);
+        DoorObject podHatch = new DoorObject("Pod Hatch", "The airlock to the escape pod.", true, "Override Chip", "Escape Pod", true);
 
-        // Ușa de ieșire finală (încuiată cu golden key)
-        DoorObject exitDoor = new DoorObject("Ieșirea Castelului", "O poartă masivă din lemn de stejar.", true, "Cheie de Aur", "Freedom", true);
-        hallway.addObject(exitDoor);
+        controlRoom.addObject(terminalLog);
+        controlRoom.addObject(overrideChip);
+        controlRoom.addObject(podHatch);
 
-        // --- CONEXIUNI ---
-        cell.addExit(Direction.NORTH, hallway);
-        hallway.addExit(Direction.SOUTH, cell);
-        hallway.addExit(Direction.NORTH, freedom); // Direcția spre libertate
+        // Connections
+        airlock.addExit(Direction.NORTH, controlRoom);
+        controlRoom.addExit(Direction.SOUTH, airlock);
+        controlRoom.addExit(Direction.NORTH, escapePod);
 
-        // --- INSTANȚIERE HĂRȚI ---
-        maps.put("The Dungeon", new GameMap("The Dungeon", "Evadează din închisoarea medievală.", List.of(cell, hallway, freedom), cell));
+        maps.put("Space Station Alpha", new GameMap("Space Station Alpha", "Survive the failing oxygen systems and escape the station.", List.of(airlock, controlRoom, escapePod), airlock));
+
+
+        // ==========================================
+        // MAP 2: THE HAUNTED MANOR (Horror)
+        // ==========================================
+        Location foyer = new Location("Dusty Foyer", "Cobwebs cover the chandelier. The air is freezing.");
+        Location library = new Location("Dark Library", "Thousands of rotting books line the walls.");
+        Location crypt = new Location("Family Crypt", "The exit out of this nightmare.");
+
+        // Objects in Foyer
+        ClueItem tornDiary = new ClueItem("Torn Diary", "A page ripped from a book.", "I hid the Brass Key in my coat pocket...");
+        ContainerObject coatRack = new ContainerObject("Old Coat", "A moth-eaten winter coat hanging on a rack.", false, null); // Unlocked container
+        ToolItem brassKey = new ToolItem("Brass Key", "An old, cold key.", true);
+        coatRack.addInside(brassKey);
+
+        DoorObject libraryDoor = new DoorObject("Wooden Door", "A door with scratches on the inside.", true, "Brass Key", "Dark Library", false);
+
+        foyer.addObject(tornDiary);
+        foyer.addObject(coatRack);
+        foyer.addObject(libraryDoor);
+
+        // Objects in Library
+        ToolItem silverAmulet = new ToolItem("Silver Amulet", "It glows faintly in the dark.", false);
+        ContainerObject cursedChest = new ContainerObject("Cursed Chest", "A wooden chest wrapped in chains.", true, "Silver Amulet");
+        ToolItem cryptKey = new ToolItem("Skull Key", "A key shaped like a human skull.", true);
+        cursedChest.addInside(cryptKey);
+
+        DoorObject cryptGate = new DoorObject("Iron Gate", "A massive gate leading outside.", true, "Skull Key", "Family Crypt", true);
+
+        library.addObject(silverAmulet);
+        library.addObject(cursedChest);
+        library.addObject(cryptGate);
+
+        // Connections
+        foyer.addExit(Direction.EAST, library);
+        library.addExit(Direction.WEST, foyer);
+        library.addExit(Direction.NORTH, crypt);
+
+        maps.put("The Haunted Manor", new GameMap("The Haunted Manor", "Find your way out before the ghosts find you.", List.of(foyer, library, crypt), foyer));
+
+
+        // ==========================================
+        // MAP 3: COLD WAR BUNKER (Spy Thriller)
+        // ==========================================
+        Location barracks = new Location("Soldiers Barracks", "Rows of empty bunk beds. An alarm is blaring.");
+        Location commsRoom = new Location("Comms Room", "Radio equipment and a large world map.");
+        Location surface = new Location("The Surface", "Snowy mountains and freedom.");
+
+        // Objects in Barracks
+        ToolItem lockpick = new ToolItem("Lockpick Set", "A set of professional lockpicks.", true);
+        DoorObject steelDoor = new DoorObject("Steel Door", "A military grade door.", true, "Lockpick Set", "Comms Room", false);
+
+        barracks.addObject(lockpick);
+        barracks.addObject(steelDoor);
+
+        // Objects in Comms Room
+        ClueItem memo = new ClueItem("Top Secret Memo", "A classified document.", "The launch code disk is in the safe. Do NOT lose it.");
+        ToolItem stethoscope = new ToolItem("Stethoscope", "Used by medics, but good for cracking safes.", false);
+        ContainerObject safe = new ContainerObject("Wall Safe", "A combination safe hidden behind a painting.", true, "Stethoscope");
+        ToolItem launchCodes = new ToolItem("Launch Codes", "A floppy disk containing the codes.", true);
+        safe.addInside(launchCodes);
+
+        DoorObject blastHatch = new DoorObject("Blast Hatch", "A heavy hatch leading to the surface.", true, "Launch Codes", "The Surface", true);
+
+        commsRoom.addObject(memo);
+        commsRoom.addObject(stethoscope);
+        commsRoom.addObject(safe);
+        commsRoom.addObject(blastHatch);
+
+        // Connections
+        barracks.addExit(Direction.NORTH, commsRoom);
+        commsRoom.addExit(Direction.SOUTH, barracks);
+        commsRoom.addExit(Direction.NORTH, surface); // Folosim direcția UP!
+
+        maps.put("Cold War Bunker", new GameMap("Cold War Bunker", "Steal the launch codes and escape the facility.", List.of(barracks, commsRoom, surface), barracks));
     }
 
     public List<GameMap> getAllMaps(){

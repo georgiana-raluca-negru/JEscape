@@ -35,6 +35,7 @@ public class ContainerObject extends  LockableObject implements Storable {
         contents.add(object);
     }
 
+
     @Override
     public String toString() {
         return "ContainerObject{" +
