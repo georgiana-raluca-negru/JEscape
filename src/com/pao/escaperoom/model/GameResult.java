@@ -1,7 +1,5 @@
 package com.pao.escaperoom.model;
 
-import com.pao.escaperoom.commands.Command;
-
 public final class GameResult implements Comparable<GameResult> {
     private final String playerName;
     private final String mapName;
@@ -18,8 +16,6 @@ public final class GameResult implements Comparable<GameResult> {
         this.timeTakenSeconds = timeTakenSeconds;
     }
 
-    // aici e vorba de niste puncte pe care le capat pe parcursul seisunii?
-    // ma gandesc
     public double calculatePoints(){
         if(!isWin){
             return 0.0;

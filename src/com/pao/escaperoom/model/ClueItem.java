@@ -12,12 +12,6 @@ public class ClueItem extends Item{
     public String examine(){
         return this.getDescription() + " Although, you notice something: " + hiddenMessage;
     }
-
-    @Override
-    public String useOn(GameObject target){
-        return "You can't use " + this.getName() +  " like that. It's just a clue.";
-    }
-
     public String getHiddenMessage() {
         return hiddenMessage;
     }

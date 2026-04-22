@@ -34,7 +34,7 @@ public class CommandParser {
         System.arraycopy(parts, 1, args, 0, parts.length - 1);
         Command cmd = commands.get(commandName);
         if(cmd == null){
-            return "Cannot recognise this command. Type 'help' for a list of all possible actions.";
+            return "Cannot recognise this command. Type 'help' or '?' for a list of all possible actions.";
         }
 
         return cmd.execute(session, args);

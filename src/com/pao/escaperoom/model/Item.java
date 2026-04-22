@@ -6,5 +6,6 @@ public abstract class Item extends  GameObject implements Storable{
         super(name, description);
     }
 
-    public abstract String useOn(GameObject target);
+
+
 }

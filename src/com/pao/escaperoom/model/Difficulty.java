@@ -1,9 +1,9 @@
 package com.pao.escaperoom.model;
 
 public enum Difficulty {
-    EASY("easy", 60, 1.0),
-    MEDIUM("medium", 45, 1.5),
-    HARD("hard", 30, 2.5);
+    EASY("easy", 20, 1.0),
+    MEDIUM("medium", 10, 1.5),
+    HARD("hard", 5, 2.5);
 
     private final String displayName;
     private final int timeLimitMinutes;
@@ -20,10 +20,12 @@ public enum Difficulty {
     }
 
     public int getTimeLimitMinutes() {
+
         return timeLimitMinutes;
     }
 
     public double getMultiplier() {
+
         return multiplier;
     }
 }

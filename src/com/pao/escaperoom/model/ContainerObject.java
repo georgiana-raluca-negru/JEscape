@@ -13,21 +13,22 @@ public class ContainerObject extends  LockableObject implements Storable {
 
     @Override
     public String examine(){
-        String message = this.getDescription();
+        StringBuilder message = new StringBuilder(this.getDescription());
+        message.append(" ");
         if(this.isLocked()){
-            message += " It is firmly locked.";
+            message.append("It is firmly locked.");
         }
         else if(contents.isEmpty()){
-            message += " It is open, but completely empty.";
+            message.append("It is open, but completely empty.");
         }
         else {
-            message += "It is open. Inside you see: ";
+            message.append("It is open. Inside you see: ");
             for(Storable object: contents){
-                message += object.getName() + ", ";
+                message.append(object.getName()).append(", ");
             }
-            message = message.substring(0, message.length() - 2) + ".";
+            message.setLength(message.length() -2);
         }
-        return message;
+        return message.toString();
     }
 
     public void addInside(Storable object){

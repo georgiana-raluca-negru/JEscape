@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-// o harta se naste din a avea deja niste locatii in ea ca atfel nu ar avea sens
-// totusi cred ca ar fi mai ok sa o fac pe asta clasa finala?
-// asta am facut o imutabila si fac direct lista
 
 public final class GameMap {
     private final String name;

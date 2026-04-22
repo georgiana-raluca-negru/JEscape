@@ -1,0 +1,50 @@
+package com.pao.escaperoom.service;
+
+import com.pao.escaperoom.model.GameResult;
+
+import java.util.TreeSet;
+
+public class LeaderboardService {
+    private static LeaderboardService instance;
+    private final TreeSet<GameResult> globalLeaderboard;
+
+    private LeaderboardService(){
+            this.globalLeaderboard = new TreeSet<>();
+    }
+
+    public static LeaderboardService getInstance(){
+        if(instance == null){
+            instance = new LeaderboardService();
+        }
+        return instance;
+    }
+
+    public void addResult(GameResult result){
+        if(result != null){
+            globalLeaderboard.add(result);
+        }
+    }
+
+    public void displayTopResults(int n){
+        System.out.println("\n=========================================");
+        System.out.println("             GLOBAL LEADERBOARD        ");
+        System.out.println("=========================================");
+
+        if(globalLeaderboard.isEmpty()){
+            System.out.println("No games played yet. Be the first to escape!");
+            return;
+        }
+
+        int rank = 1;
+        for(GameResult result : globalLeaderboard){
+            if( rank > n ){
+                break;
+            }
+            System.out.println(rank + ". " + result.getPlayerName() +
+                    " | Map: " + result.getMapName() +
+                    " | Score: " + result.calculatePoints());
+
+            rank++;
+        }
+    }
+}

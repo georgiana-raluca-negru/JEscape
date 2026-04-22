@@ -6,23 +6,23 @@ import com.pao.escaperoom.model.*;
 import java.util.Scanner;
 
 public class GameService {
-    private Scanner scanner;
     private static GameService instance;
-    private CommandParser commandParser;
+    private final Scanner scanner;
+    private final CommandParser commandParser;
 
-    private GameService(){
+    private GameService() {
         this.commandParser = new CommandParser();
         this.scanner = new Scanner(System.in);
     }
 
-    public static GameService getInstance(){
-        if(instance == null){
+    public static GameService getInstance() {
+        if (instance == null) {
             instance = new GameService();
         }
         return instance;
     }
 
-    public void startNewGame(PlayerProfile player, GameMap map, Difficulty difficulty){
+    public void startNewGame(PlayerProfile player, GameMap map, Difficulty difficulty) {
         System.out.println("\n=========================================");
         System.out.println(" LOADING MISSION: " + map.getName().toUpperCase());
         System.out.println(" DIFFICULTY: " + difficulty.name());
@@ -38,9 +38,9 @@ public class GameService {
         runGame(session);
     }
 
-    private void runGame(GameSession session){
-        while(!session.isGameOver()){
-            if(session.hasTimeExpired()){
+    private void runGame(GameSession session) {
+        while (!session.isGameOver()) {
+            if (session.hasTimeExpired()) {
                 System.out.println("\n TIME IS UP!");
                 System.out.println("The room fills with sleeping gas. You failed to escape.");
                 endGame(session, false);
@@ -49,11 +49,11 @@ public class GameService {
 
             System.out.println("\n>");
             String input = scanner.nextLine().trim();
-            if(input.isEmpty()){
+            if (input.isEmpty()) {
                 continue;
             }
 
-            if(input.equalsIgnoreCase("quit")){
+            if (input.equalsIgnoreCase("quit")) {
                 System.out.println("\nYou surrendered. The guards drag you away.");
                 endGame(session, false);
                 break;
@@ -62,7 +62,7 @@ public class GameService {
             String output = commandParser.parseAndExecute(session, input);
             System.out.println(output);
 
-            if(session.isWon()){
+            if (session.isWon()) {
                 System.out.println("\nMISSION ACCOMPLISHED!");
                 System.out.println("Time taken: " + session.getElapsedSeconds() + " seconds");
                 endGame(session, true);
@@ -71,7 +71,7 @@ public class GameService {
         }
     }
 
-    private void endGame(GameSession session, boolean hasEscaped){
+    private void endGame(GameSession session, boolean hasEscaped) {
         GameResult result = session.finishGame(hasEscaped);
 
         System.out.println("\n=========================================");
@@ -80,7 +80,6 @@ public class GameService {
         System.out.println(result.toString());
 
         session.getPlayer().addGameResult(result);
+        LeaderboardService.getInstance().addResult(result);
     }
-
-
 }

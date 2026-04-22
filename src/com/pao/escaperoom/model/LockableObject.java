@@ -10,7 +10,6 @@ public abstract class LockableObject extends GameObject implements Interactable{
         this.requiredItemName = requiredItemName;
     }
 
-    // ma gandesc daca ar fi mai bine sa folosecs referinta sau string pentru cheie
     @Override
     public boolean interactWith(ToolItem tool){
         if(!isLocked){

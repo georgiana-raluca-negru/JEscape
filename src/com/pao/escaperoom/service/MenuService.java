@@ -1,15 +1,17 @@
 package com.pao.escaperoom.service;
 
+import com.pao.escaperoom.exception.EmailTakenException;
+import com.pao.escaperoom.exception.UsernameTakenException;
 import com.pao.escaperoom.model.*;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuService {
-    private Scanner scanner;
-    private PlayerService playerService;
-    private GameService gameService;
-    private MapService mapService;
+    private final Scanner scanner;
+    private final PlayerService playerService;
+    private final GameService gameService;
+    private final MapService mapService;
 
     public MenuService(){
         this.scanner = new Scanner(System.in);
@@ -31,11 +33,11 @@ public class MenuService {
             }
 
             GameMap map = selectMap();
-            Difficulty difficuly = selectDifficulty();
+            Difficulty difficulty = selectDifficulty();
 
-            gameService.startNewGame(player, map, difficuly);
+            gameService.startNewGame(player, map, difficulty);
 
-            System.out.println("\nReturning to Maint Menu...\n");
+            System.out.println("\nReturning to Main Menu...\n");
         }
     }
 
@@ -59,7 +61,7 @@ public class MenuService {
                 case "3":
                     return null;
                 default:
-                    System.out.println("Invalid chocie.");
+                    System.out.println("Invalid choice.");
             }
 
             if(player != null){
@@ -69,9 +71,9 @@ public class MenuService {
     }
 
     private PlayerProfile login(){
-        System.out.println("Enter username: ");
-        String username = scanner.nextLine().trim();
-        PlayerProfile player = playerService.findPlayerByName(username);
+        System.out.println("Enter Username or Email: ");
+        String input = scanner.nextLine().trim();
+        PlayerProfile player = playerService.findPlayer(input);
 
         if(player != null){
             System.out.println("Welcome back, " + player.getUsername() + "!");
@@ -90,14 +92,17 @@ public class MenuService {
         String email = scanner.nextLine().trim();
 
         PlayerProfile newPlayer = new PlayerProfile(username, email);
-        if(playerService.addPlayer(newPlayer)){
-            System.out.println("Profile creater successfully!");
-            return  newPlayer;
+        try{
+            playerService.addPlayer(newPlayer);
         }
-        else {
-            System.out.println("Username is already taken. Try a different one.");
+        catch (UsernameTakenException | EmailTakenException e){
+            System.out.println(e.getMessage());
+            System.out.println(" Please try again.");
             return null;
         }
+
+        System.out.println("Profile created successfully!");
+        return newPlayer;
     }
 
     private GameMap selectMap(){
@@ -127,9 +132,9 @@ public class MenuService {
     private Difficulty selectDifficulty(){
         while(true){
             System.out.println("\n--- SELECT DIFFICULTY ---");
-            System.out.println("1. EASY (60 min)");
-            System.out.println("2. MEDIUM (45 min)");
-            System.out.println("3. HARD (30 min)");
+            System.out.println("1. EASY (20 min)");
+            System.out.println("2. MEDIUM (10 min)");
+            System.out.println("3. HARD (5 min)");
             System.out.print("Choose difficulty: ");
             String choice = scanner.nextLine().trim();
 

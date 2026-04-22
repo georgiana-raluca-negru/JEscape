@@ -24,14 +24,15 @@ public class DoorObject extends LockableObject{
 
     @Override
     public String examine(){
-        String message = this.getDestination();
+        StringBuilder message = new StringBuilder(this.getDescription());
+        message.append(" ");
         if(this.isLocked()){
-            message += "It is locked.";
+            message.append("It is locked.");
         }
         else {
-            message += "It is unlocked and slightly open, leading to " + destination + ".";
+            message.append("It is unlocked and slightly open, leading to ").append(destination).append(".");
         }
-        return message;
+        return message.toString();
     }
 
     @Override

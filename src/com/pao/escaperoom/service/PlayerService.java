@@ -1,5 +1,7 @@
 package com.pao.escaperoom.service;
 
+import com.pao.escaperoom.exception.EmailTakenException;
+import com.pao.escaperoom.exception.UsernameTakenException;
 import com.pao.escaperoom.model.PlayerProfile;
 
 import java.util.HashMap;
@@ -7,12 +9,12 @@ import java.util.Map;
 
 public class PlayerService {
     private static PlayerService instance;
-
-    // a map so taht i can check the existence of a plpayer fast
-    private Map<String, PlayerProfile> players;
+    private final Map<String, PlayerProfile> playersByUsername;
+    private final Map<String, PlayerProfile> playersByEmail;
 
     private PlayerService(){
-        this.players = new HashMap<>();
+        this.playersByUsername = new HashMap<>();
+        this.playersByEmail = new HashMap<>();
         initializePlayers();
     }
 
@@ -23,41 +25,65 @@ public class PlayerService {
         return instance;
     }
 
-    public boolean addPlayer(PlayerProfile player){
-        if (player == null || player.getUsername() == null){
+    public boolean addPlayer(PlayerProfile player) throws UsernameTakenException, EmailTakenException {
+        if (player == null || player.getUsername() == null || player.getEmail() == null){
             return false;
         }
 
-        if(players.containsKey(player.getUsername())){
-            return false;
+        if(playersByUsername.containsKey(player.getUsername())){
+            throw new UsernameTakenException(player.getUsername());
         }
 
-        players.put(player.getUsername(), player);
+        if(playersByEmail.containsKey(player.getEmail())){
+            throw new EmailTakenException(player.getEmail());
+        }
+
+        playersByUsername.put(player.getUsername(), player);
+        playersByEmail.put(player.getEmail(), player);
+
         return true;
     }
 
-    public PlayerProfile findPlayerByName(String username){
-        if(username == null){
+    public PlayerProfile findPlayer(String identifier){
+        if(identifier == null || identifier.trim().isEmpty()){
             return null;
         }
-        return players.get(username);
+
+        if(identifier.contains("@")){
+            return playersByEmail.get(identifier);
+        }
+        else {
+            return playersByUsername.get(identifier);
+        }
     }
 
-    public boolean deletePlayer(String username){
-        if(username == null){
+    public boolean deletePlayer(String identifier){
+        PlayerProfile playerToRemove = findPlayer(identifier);
+
+        if(playerToRemove == null){
             return false;
         }
 
-        // returns null if there is not such object found
-        PlayerProfile removedPlayer = players.remove(username);
-        return removedPlayer != null;
+        playersByUsername.remove(playerToRemove.getUsername());
+        playersByEmail.remove(playerToRemove.getEmail());
+
+        return true;
     }
 
+
+
     private void initializePlayers(){
-        // Adăugăm un admin
-        players.put("admin", new PlayerProfile("admin", "admin@escaperoom.com"));
-        players.put("player1", new PlayerProfile("player1", "player1@gmail.com"));
-        players.put("Escapist_pro", new PlayerProfile("Escapist_Pro", "pro@yahoo.com"));
+        PlayerProfile player1 = new PlayerProfile("admin", "admin@escaperoom.com");
+        PlayerProfile player2 = new PlayerProfile("player1", "player1@gmail.com");
+        PlayerProfile player3 = new PlayerProfile("Escapist_Pro", "pro@yahoo.com");
+        playersByUsername.put("admin", player1);
+        playersByUsername.put("player1", player2);
+        playersByUsername.put("Escapist_pro", player3);
+
+        playersByEmail.put("admin@escaperoom.com", player1);
+        playersByEmail.put("player1@gmail.com", player2);
+        playersByEmail.put("pro@yahoo.com", player3);
+
     }
 
 }

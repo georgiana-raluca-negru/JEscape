@@ -9,20 +9,21 @@ public enum Direction {
     private final String fullName;
     private final String  shortName;
 
-    private Direction(String fullName, String shortName){
+    Direction(String fullName, String shortName){
         this.fullName = fullName;
         this.shortName = shortName;
     }
 
     public String getFullName(){
+
         return fullName;
     }
 
     public String getShortName(){
+
         return shortName;
     }
 
-    // caz in care introduc ceva de genul nOrtH si imi va identiifica corect pentru ca aduc totoul la lowercase
     public static Direction fromString(String input){
         if(input == null){
             return null;

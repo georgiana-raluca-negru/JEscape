@@ -1,5 +1,6 @@
 package com.pao.escaperoom.commands;
 
+import com.pao.escaperoom.exception.InvalidMoveException;
 import com.pao.escaperoom.model.*;
 
 public class MoveCommand implements Command{
@@ -43,7 +44,7 @@ public class MoveCommand implements Command{
 
         try{
             return session.movePlayer(dir);
-        } catch (Exception e){
+        } catch (InvalidMoveException e){
             return e.getMessage();
         }
     }

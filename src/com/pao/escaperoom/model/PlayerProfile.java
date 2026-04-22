@@ -20,10 +20,12 @@ public class PlayerProfile {
     }
 
     public void addGameResult(GameResult result) {
+
         this.gameHistory.add(result);
     }
 
     public String getUsername() {
+
         return username;
     }
 
@@ -32,14 +34,17 @@ public class PlayerProfile {
     }
 
     public String getEmail() {
+
         return email;
     }
 
     public void setEmail(String email) {
+
         this.email = email;
     }
 
     public LocalDate getRegistrationDate() {
+
         return registrationDate;
     }
 

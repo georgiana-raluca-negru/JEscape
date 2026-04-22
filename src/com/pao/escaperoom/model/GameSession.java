@@ -4,18 +4,16 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.pao.escaperoom.exception.InvalidMoveException;
 
 public class GameSession {
-    // i need these to create e game session
     private PlayerProfile player;
     private GameMap map;
     private Difficulty difficulty;
 
-    // player state ( inventory and where i am )
     private List<Item> inventory;
     private Location currentLocation;
 
-    // the state of the session itself
     private LocalDateTime startTime;
     private boolean isGameOver;
     private boolean isWon;
@@ -32,14 +30,12 @@ public class GameSession {
         this.isWon = false;
     }
 
-    // pornesc jocul
-    // practic o sa am oleaca de story pana sa incep si apoi dupa o sa mi pornesc timpul pentru sesiune
     public void start(){
 
         startTime = LocalDateTime.now();
     }
 
-    // seconds spent gaming
+
     public  long getElapsedSeconds() {
         if (startTime == null){
             return 0;
@@ -78,12 +74,11 @@ public class GameSession {
         return null;
     }
 
-    // change the cuurent location towards a direction
-    public String movePlayer(Direction direction) {
+    public String movePlayer(Direction direction) throws InvalidMoveException {
         Location nextLocation = currentLocation.getExit(direction);
 
         if(nextLocation == null){
-            return "You cannot go this way. There's a dead end.";
+            throw new InvalidMoveException("You cannot go " + direction.name().toLowerCase() + ". There is a dead end.");
         }
 
         this.currentLocation = nextLocation;
@@ -96,15 +91,13 @@ public class GameSession {
         this.isWon = hasEscaped;
         long timeTaken = getElapsedSeconds();
 
-        GameResult result = new GameResult(
+        return new GameResult(
                 this.player.getUsername(),
                 this.map.getName(),
                 this.difficulty,
                 hasEscaped,
                 timeTaken
         );
-
-        return result;
     }
 
     public PlayerProfile getPlayer() {

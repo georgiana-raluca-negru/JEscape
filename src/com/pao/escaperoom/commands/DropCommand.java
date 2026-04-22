@@ -1,6 +1,5 @@
 package com.pao.escaperoom.commands;
 
-import com.pao.escaperoom.model.GameObject;
 import com.pao.escaperoom.model.GameSession;
 import com.pao.escaperoom.model.Item;
 import com.pao.escaperoom.model.Location;

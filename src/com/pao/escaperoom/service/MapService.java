@@ -1,12 +1,6 @@
 package com.pao.escaperoom.service;
 
-import com.pao.escaperoom.model.Direction;
-import com.pao.escaperoom.model.GameMap;
-import com.pao.escaperoom.model.Location;
-import com.pao.escaperoom.model.Item;
-import com.pao.escaperoom.model.ClueItem;
-import com.pao.escaperoom.model.ToolItem;
-import com.pao.escaperoom.model.DoorObject;
+import com.pao.escaperoom.model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MapService {
-
     private static MapService instance;
-    private Map<String, GameMap> maps;
+    private final Map<String, GameMap> maps;
 
     private MapService(){
         this.maps = new HashMap<>();
@@ -28,6 +21,31 @@ public class MapService {
             instance = new MapService();
         }
         return instance;
+    }
+
+    public boolean addMap(GameMap newMap){
+        if(newMap == null || newMap.getName() == null){
+            return false;
+        }
+
+        if(maps.containsKey(newMap.getName())){
+            return false;
+        }
+
+        maps.put(newMap.getName(), newMap);
+        return true;
+    }
+
+    public GameMap getMapByName(String name){
+        return maps.get(name);
+    }
+
+    public boolean deleteMap(String mapName){
+        if(mapName == null){
+            return false;
+        }
+
+        return maps.get(mapName) != null;
     }
 
     private void initializeMaps() {
@@ -65,10 +83,6 @@ public class MapService {
 
         // --- INSTANȚIERE HĂRȚI ---
         maps.put("The Dungeon", new GameMap("The Dungeon", "Evadează din închisoarea medievală.", List.of(cell, hallway, freedom), cell));
-    }
-
-    public GameMap getMapByName(String name){
-        return maps.get(name);
     }
 
     public List<GameMap> getAllMaps(){
