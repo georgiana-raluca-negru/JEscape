@@ -8,6 +8,7 @@ A complex, interactive text-based Escape Room game built in Java. This project s
 The game provides a rich set of **10 distinct actions** divided between the out-of-game menu flow and the in-game command engine. The `Main` class serves as the entry point to demonstrate all these actions in a continuous loop.
 
 **Menu & Setup Actions:**
+
 1. **`Register`**: Prompts the user to create a new profile.
 2. **`Login`**: Authenticates an existing user via username or email.
 3. **`Edit Profile`**: Allows the user to update their custom Title and Bio.
@@ -15,6 +16,7 @@ The game provides a rich set of **10 distinct actions** divided between the out-
 5. **`View Leaderboard`**: Displays the top global escape scores.
 
 **In-Game Commands:**
+
 6. **`move <direction>`**: Navigates the player between connected locations.
 7. **`inspect <target>`**: Examines rooms, items, or containers to reveal hidden objects or clues.
 8. **`take <item>`**: Picks up an item from the room or from inside an unlocked container.
@@ -23,12 +25,14 @@ The game provides a rich set of **10 distinct actions** divided between the out-
 11. **`inventory`**: Displays all items currently carried by the player.
 12. **`stats`**: Shows the active game session data (Time remaining, difficulty, current room).
 13. **`help`**: Displays a dynamically generated list of all available commands and their syntax.
+
 ---
 
 ## Domain Models and Object Types
 The engine is built upon **more than 8 core domain classes**, fully encapsulated with `private` attributes, appropriate `getters/setters`, and overridden `toString()` methods for logging and debugging. 
 
 **Core Entities:**
+
 * `PlayerProfile` (Holds user credentials, aesthetic titles, and personal history)
 * `GameSession` (Tracks the active state of a player's current run)
 * `GameResult` (Stores the historical data of a finished game)
@@ -36,12 +40,14 @@ The engine is built upon **more than 8 core domain classes**, fully encapsulated
 * `GameMap` (Aggregates locations and defines the starting point)
 
 **Interactive Objects:**
+
 * `DoorObject` (Manages transitions between locations and lock states)
 * `ContainerObject` (Lockable entities that hold other items)
 * `ToolItem` (Functional items used to interact with the environment)
 * `ClueItem` (Objects that provide textual hints to the player)
 
 **Enumerations (Enums):**
+
 * **`Difficulty`**: Defines time limits and score multipliers (e.g., `EASY`, `MEDIUM`, `HARD`).
 * **`Direction`**: Enforces strict navigational movement vectors (`NORTH`, `SOUTH`, `EAST`, `WEST`).
 ---
@@ -105,12 +111,14 @@ Memory management and relationships are handled using multiple collection types 
 The business logic is decoupled from the models using the **Singleton Design Pattern**, ensuring only one instance of each service runs in memory. These services provide full **CRUD (Create, Read, Update, Delete)** operations:
 
 ### 1. `PlayerService`
+
 * **Create**: Registers new users.
 * **Read**: Lookups via `findPlayer` (smart search by email or username).
 * **Update**: Modifies player metadata (Title, Bio).
 * **Delete**: Safely removes users from all indexing maps to prevent data leaks.
 
 ### 2. `MapService`
+
 * **Create**: Ingests new `GameMap` layouts into the engine.
 * **Read**: Fetches specific maps or lists all available missions.
 * **Update**: Replaces old map layouts with newly edited versions.
