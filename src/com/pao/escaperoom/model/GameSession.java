@@ -7,11 +7,11 @@ import java.util.List;
 import com.pao.escaperoom.exception.InvalidMoveException;
 
 public class GameSession {
-    private PlayerProfile player;
-    private GameMap map;
-    private Difficulty difficulty;
+    private final PlayerProfile player;
+    private final GameMap map;
+    private final Difficulty difficulty;
 
-    private List<Item> inventory;
+    private final List<Item> inventory;
     private Location currentLocation;
 
     private LocalDateTime startTime;
