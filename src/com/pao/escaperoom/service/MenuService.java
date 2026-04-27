@@ -12,12 +12,14 @@ public class MenuService {
     private final PlayerService playerService;
     private final GameService gameService;
     private final MapService mapService;
+    private final LeaderboardService leaderboardService;
 
     public MenuService(){
         this.scanner = new Scanner(System.in);
         this.playerService = PlayerService.getInstance();
         this.gameService = GameService.getInstance();
         this.mapService = MapService.getInstance();
+        this.leaderboardService = LeaderboardService.getInstance();
     }
 
     public void start(){
@@ -32,12 +34,10 @@ public class MenuService {
                 break;
             }
 
-            GameMap map = selectMap();
-            Difficulty difficulty = selectDifficulty();
-
-            gameService.startNewGame(player, map, difficulty);
-
-            System.out.println("\nReturning to Main Menu...\n");
+            boolean loggedIn = true;
+            while(loggedIn){
+                loggedIn = playerDashboard(player);
+            }
         }
     }
 
@@ -46,7 +46,8 @@ public class MenuService {
             System.out.println("\n--- MAIN MENU ---");
             System.out.println("1. Create New Profile");
             System.out.println("2. Login");
-            System.out.println("3. Quit");
+            System.out.println("3. View Global Leaderboard");
+            System.out.println("4. Quit");
             System.out.print("Choose option: ");
 
             String choice = scanner.nextLine().trim();
@@ -59,6 +60,9 @@ public class MenuService {
                     player = login();
                     break;
                 case "3":
+                    leaderboardService.displayTopResults(10);
+                    break;
+                case "4":
                     return null;
                 default:
                     System.out.println("Invalid choice.");
@@ -67,6 +71,96 @@ public class MenuService {
             if(player != null){
                 return player;
             }
+        }
+    }
+
+    private boolean playerDashboard(PlayerProfile player){
+        System.out.println("\n--- LOGGED IN AS: " + player.getUsername().toUpperCase() + " ---");
+        System.out.println("Title: " + player.getTitle().getDisplayName());
+
+        System.out.println("1. Play Escape Room");
+        System.out.println("2. View My Game History");
+        System.out.println("3. Edit Profile (Bio & Title)");
+        System.out.println("4. Logout");
+        System.out.print("Choose option: ");
+
+        String choice = scanner.nextLine().trim();
+
+        switch (choice){
+            case "1":
+                GameMap map = selectMap();
+                Difficulty difficulty = selectDifficulty();
+                gameService.startNewGame(player, map, difficulty);
+                System.out.println("\nReturning to Player Dashboard...\n");
+                break;
+            case "2":
+                viewPersonalHistory(player);
+                break;
+            case "3":
+                editProfile(player);
+                break;
+            case "4":
+                System.out.println("Logging out...");
+                return false;
+            default:
+                System.out.println("Invalid choice");
+        }
+        return true;
+    }
+
+    private void viewPersonalHistory(PlayerProfile player) {
+        System.out.println("\n--- MY ESCAPE HISTORY ---");
+        List<GameResult> history = player.getGameHistory();
+
+        if (history.isEmpty()) {
+            System.out.println("You haven't played any games yet.");
+        } else {
+            for (int i = 0; i < history.size(); i++) {
+                System.out.println((i + 1) + ". " + history.get(i).toString());
+            }
+        }
+    }
+
+    private void editProfile(PlayerProfile player){
+        System.out.println("\n--- EDIT PROFILE ---");
+        System.out.println("Current Title: " + player.getTitle().getDisplayName());
+
+        System.out.println("Available Titles:");
+        PlayerTitle[] availableTitles = PlayerTitle.values();
+
+        for(int i=0; i < availableTitles.length; i++){
+            System.out.println((i+1) + " " + availableTitles[i].getDisplayName());
+        }
+        System.out.println("0.Cancel");
+        System.out.println("Choose your new title (enter number): ");
+
+        String choice = scanner.nextLine().trim();
+
+        try{
+            int index = Integer.parseInt(choice);
+
+            if(index == 0){
+                System.out.println("Edit canceled. Returning to dashboard...");
+                return;
+            }
+
+            if(index >=0 && index <= availableTitles.length){
+                PlayerTitle selectedTitle = availableTitles[index -1 ];
+
+                boolean success = playerService.updatePlayerTitle(player.getUsername(), selectedTitle);
+                if(success){
+                    System.out.println("Success! Your title is now: " + selectedTitle.getDisplayName());
+                }
+                else {
+                    System.out.println("An error occured while updating the title .");
+                }
+            }
+            else {
+                System.out.println("Invalid chocie. Please choose a valid number.");
+            }
+        }
+        catch(NumberFormatException e){
+            System.out.println("Invalid input. PLease enter a number.");
         }
     }
 

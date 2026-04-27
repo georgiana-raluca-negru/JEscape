@@ -46,14 +46,19 @@ public final class GameResult implements Comparable<GameResult> {
 
     @Override
     public String toString() {
-        return "GameResult{" +
-                "player='" + playerName + '\'' +
-                ", map='" + mapName + '\'' +
-                ", difficulty=" + difficulty +
-                ", result=" + (isWin ? "ESCAPED" : "DIED") +
-                ", time=" + timeTakenSeconds + "s" +
-                ", SCORE=" + calculatePoints() +
-                '}';
+        String statusIcon = isWin ? " ESCAPED" : " FAILED ";
+
+        long minutes = timeTakenSeconds / 60;
+        long seconds = timeTakenSeconds % 60;
+        String timeFormatted = String.format("%02d:%02d", minutes, seconds);
+
+        return String.format("%s | Map: %-20s | Diff: %-6s | Time: %s | Score: %7.2f",
+                statusIcon,
+                "\"" + mapName + "\"",
+                difficulty.name(),
+                timeFormatted,
+                calculatePoints()
+        );
     }
 
     public String getPlayerName() {

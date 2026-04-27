@@ -21,9 +21,14 @@ public class PlayerProfile {
         this.gameHistory = new ArrayList<>();
     }
 
-    public void addGameResult(GameResult result) {
+    public List<GameResult> getGameHistory() {
+        return new ArrayList<>(this.gameHistory);
+    }
 
-        this.gameHistory.add(result);
+    public void addGameResult(GameResult result) {
+        if(result != null){
+            this.gameHistory.add(result);
+        }
     }
 
     public String getUsername() {

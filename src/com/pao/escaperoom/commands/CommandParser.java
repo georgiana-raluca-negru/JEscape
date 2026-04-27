@@ -20,6 +20,7 @@ public class CommandParser {
         commands.put("?", new HelpCommand());
         commands.put("inventory", new InventoryCommand());
         commands.put("inv", new InventoryCommand());
+        commands.put("stats", new StatsCommand());
     }
 
     public String parseAndExecute(GameSession session, String input){
