@@ -4,9 +4,11 @@ import com.pao.escaperoom.model.GameObject;
 import com.pao.escaperoom.model.GameSession;
 import com.pao.escaperoom.model.Item;
 import com.pao.escaperoom.model.Location;
+import com.pao.escaperoom.service.AuditService;
 
 public class InspectCommand implements Command{
     public String execute(GameSession session, String[] args){
+        AuditService.getInstance().log("inspect");
         if(args.length == 0){
             return "Inspect what? (Try: 'room', '[item] from inventory', or [object] from room').";
         }

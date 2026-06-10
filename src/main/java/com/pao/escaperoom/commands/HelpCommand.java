@@ -1,10 +1,11 @@
 package com.pao.escaperoom.commands;
 import com.pao.escaperoom.model.GameSession;
+import com.pao.escaperoom.service.AuditService;
 
 public class HelpCommand implements Command{
     @Override
     public String execute(GameSession session, String[] args){
-
+        AuditService.getInstance().log("help");
         String sb = "=========================================================\n" +
                     "                    AVAILABLE COMMANDS                   \n" +
                     "=========================================================\n" +

@@ -6,6 +6,7 @@ import com.pao.escaperoom.model.*;
 
 import java.util.List;
 import java.util.Scanner;
+import com.pao.escaperoom.service.AuditService;
 
 public class MenuService {
     private final Scanner scanner;
@@ -60,6 +61,7 @@ public class MenuService {
                     player = login();
                     break;
                 case "3":
+                    AuditService.getInstance().log("view_leaderboard");
                     leaderboardService.displayTopResults(10);
                     break;
                 case "4":
@@ -94,12 +96,15 @@ public class MenuService {
                 System.out.println("\nReturning to Player Dashboard...\n");
                 break;
             case "2":
+                AuditService.getInstance().log("view_history");
                 viewPersonalHistory(player);
                 break;
             case "3":
+                AuditService.getInstance().log("update_title");
                 editProfile(player);
                 break;
             case "4":
+                AuditService.getInstance().log("logout");
                 System.out.println("Logging out...");
                 return false;
             default:
@@ -165,6 +170,7 @@ public class MenuService {
     }
 
     private PlayerProfile login(){
+        AuditService.getInstance().log("login");
         System.out.println("Enter Username or Email: ");
         String input = scanner.nextLine().trim();
         PlayerProfile player = playerService.findPlayer(input);
@@ -180,6 +186,7 @@ public class MenuService {
     }
 
     private PlayerProfile register(){
+        AuditService.getInstance().log("register");
         System.out.println("Choose your username: ");
         String username = scanner.nextLine().trim();
         System.out.println("Enter email: ");

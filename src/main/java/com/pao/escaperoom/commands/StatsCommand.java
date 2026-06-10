@@ -2,10 +2,12 @@ package com.pao.escaperoom.commands;
 
 import com.pao.escaperoom.model.GameSession;
 import com.pao.escaperoom.model.PlayerProfile;
+import com.pao.escaperoom.service.AuditService;
 
 public class StatsCommand implements  Command{
     @Override
     public String execute(GameSession session, String[] args) {
+        AuditService.getInstance().log("stats");
         PlayerProfile player = session.getPlayer();
 
         StringBuilder stats = new StringBuilder();

@@ -1,10 +1,11 @@
 package com.pao.escaperoom.commands;
 
 import com.pao.escaperoom.model.*;
-import com.sun.jdi.event.MonitorContendedEnteredEvent;
+import com.pao.escaperoom.service.AuditService;
 
 public class TakeCommand implements Command {
     public String execute(GameSession session, String[] args){
+        AuditService.getInstance().log("take");
         if(args.length == 0){
             return "Take what? Please specify an object name.";
         }

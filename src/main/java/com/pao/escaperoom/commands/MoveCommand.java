@@ -2,11 +2,13 @@ package com.pao.escaperoom.commands;
 
 import com.pao.escaperoom.exception.InvalidMoveException;
 import com.pao.escaperoom.model.*;
+import com.pao.escaperoom.service.AuditService;
 
 public class MoveCommand implements Command{
 
     @Override
     public String execute(GameSession session, String[] args){
+        AuditService.getInstance().log("move");
         if(args.length == 0){
             return "Move where? (e.g., move north)";
         }

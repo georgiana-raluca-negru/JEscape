@@ -1,9 +1,11 @@
 package com.pao.escaperoom.commands;
 
 import com.pao.escaperoom.model.*;
+import com.pao.escaperoom.service.AuditService;
 
 public class UseCommand implements Command{
     public String execute(GameSession session, String[] args) {
+        AuditService.getInstance().log("use");
         if (args.length < 3) {
             return "Use what on what? (e.g., use key on door).";
         }

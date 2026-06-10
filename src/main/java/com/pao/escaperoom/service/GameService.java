@@ -23,6 +23,7 @@ public class GameService {
     }
 
     public void startNewGame(PlayerProfile player, GameMap map, Difficulty difficulty) {
+        AuditService.getInstance().log("start_game");
         System.out.println("\n=========================================");
         System.out.println(" LOADING MISSION: " + map.getName().toUpperCase());
         System.out.println(" DIFFICULTY: " + difficulty.name());
@@ -54,6 +55,7 @@ public class GameService {
             }
 
             if (input.equalsIgnoreCase("quit")) {
+                AuditService.getInstance().log("quit");
                 System.out.println("\nYou surrendered. The guards drag you away.");
                 endGame(session, false);
                 break;
@@ -72,6 +74,7 @@ public class GameService {
     }
 
     private void endGame(GameSession session, boolean hasEscaped) {
+        AuditService.getInstance().log(hasEscaped ? "game_won" : "game_lost");
         GameResult result = session.finishGame(hasEscaped);
         result.setPlayerId(session.getPlayer().getId());
 
