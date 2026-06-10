@@ -15,7 +15,7 @@ public class LeaderboardService {
         loadFromDatabase();
     }
 
-    public static LeaderboardService getInstance() {
+    public static synchronized LeaderboardService getInstance() {
         if (instance == null) {
             instance = new LeaderboardService();
         }

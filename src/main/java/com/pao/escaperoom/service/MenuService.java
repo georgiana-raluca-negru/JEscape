@@ -77,13 +77,19 @@ public class MenuService {
     }
 
     private boolean playerDashboard(PlayerProfile player){
+        if (player.getUsername().equalsIgnoreCase("admin")) {
+            return adminDashboard(player);
+        }
+
         System.out.println("\n--- LOGGED IN AS: " + player.getUsername().toUpperCase() + " ---");
         System.out.println("Title: " + player.getTitle().getDisplayName());
 
         System.out.println("1. Play Escape Room");
         System.out.println("2. View My Game History");
-        System.out.println("3. Edit Profile (Bio & Title)");
-        System.out.println("4. Logout");
+        System.out.println("3. View Global Leaderboard");
+        System.out.println("4. Edit Profile (Bio & Title)");
+        System.out.println("5. Delete My Profile");
+        System.out.println("0. Logout");
         System.out.print("Choose option: ");
 
         String choice = scanner.nextLine().trim();
@@ -100,10 +106,17 @@ public class MenuService {
                 viewPersonalHistory(player);
                 break;
             case "3":
+                AuditService.getInstance().log("view_leaderboard");
+                leaderboardService.displayTopResults(10);
+                break;
+            case "4":
                 AuditService.getInstance().log("update_title");
                 editProfile(player);
                 break;
-            case "4":
+            case "5":
+                if (deleteOwnProfile(player)) return false;
+                break;
+            case "0":
                 AuditService.getInstance().log("logout");
                 System.out.println("Logging out...");
                 return false;
@@ -111,6 +124,107 @@ public class MenuService {
                 System.out.println("Invalid choice");
         }
         return true;
+    }
+
+    private boolean adminDashboard(PlayerProfile admin) {
+        System.out.println("\n--- ADMIN PANEL ---");
+        System.out.println("1. Delete a Player");
+        System.out.println("2. Delete a Map");
+        System.out.println("3. View Global Leaderboard");
+        System.out.println("0. Logout");
+        System.out.print("Choose option: ");
+
+        String choice = scanner.nextLine().trim();
+
+        switch (choice) {
+            case "1":
+                adminDeletePlayer();
+                break;
+            case "2":
+                adminDeleteMap();
+                break;
+            case "3":
+                AuditService.getInstance().log("view_leaderboard");
+                leaderboardService.displayTopResults(10);
+                break;
+            case "0":
+                AuditService.getInstance().log("logout");
+                System.out.println("Logging out...");
+                return false;
+            default:
+                System.out.println("Invalid choice.");
+        }
+        return true;
+    }
+
+    private boolean deleteOwnProfile(PlayerProfile player) {
+        System.out.println("\nAre you sure you want to delete your profile and all game history? (yes/no): ");
+        String confirm = scanner.nextLine().trim();
+        if (!confirm.equalsIgnoreCase("yes")) {
+            System.out.println("Deletion cancelled.");
+            return false;
+        }
+        AuditService.getInstance().log("delete_profile");
+        boolean deleted = playerService.deletePlayer(player.getUsername());
+        if (deleted) {
+            System.out.println("Your profile has been deleted. Goodbye!");
+        } else {
+            System.out.println("Failed to delete profile. Please try again.");
+        }
+        return deleted;
+    }
+
+    private void adminDeletePlayer() {
+        System.out.println("\nEnter username to delete: ");
+        String username = scanner.nextLine().trim();
+        if (username.equalsIgnoreCase("admin")) {
+            System.out.println("Cannot delete the admin account.");
+            return;
+        }
+        System.out.println("Are you sure you want to delete player '" + username + "' and all their history? (yes/no): ");
+        String confirm = scanner.nextLine().trim();
+        if (!confirm.equalsIgnoreCase("yes")) {
+            System.out.println("Deletion cancelled.");
+            return;
+        }
+        AuditService.getInstance().log("admin_delete_player");
+        boolean deleted = playerService.deletePlayer(username);
+        System.out.println(deleted ? "Player deleted successfully." : "Player not found.");
+    }
+
+    private void adminDeleteMap() {
+        List<GameMap> maps = mapService.getAllMaps();
+        if (maps.isEmpty()) {
+            System.out.println("No maps available.");
+            return;
+        }
+        System.out.println("\n--- SELECT MAP TO DELETE ---");
+        for (int i = 0; i < maps.size(); i++) {
+            System.out.println((i + 1) + ". " + maps.get(i).getName());
+        }
+        System.out.println("0. Cancel");
+        System.out.print("Choose map number: ");
+
+        try {
+            int index = Integer.parseInt(scanner.nextLine().trim());
+            if (index == 0) return;
+            if (index < 1 || index > maps.size()) {
+                System.out.println("Invalid choice.");
+                return;
+            }
+            String mapName = maps.get(index - 1).getName();
+            System.out.println("Are you sure you want to delete map '" + mapName + "'? (yes/no): ");
+            String confirm = scanner.nextLine().trim();
+            if (!confirm.equalsIgnoreCase("yes")) {
+                System.out.println("Deletion cancelled.");
+                return;
+            }
+            AuditService.getInstance().log("admin_delete_map");
+            boolean deleted = mapService.deleteMap(mapName);
+            System.out.println(deleted ? "Map deleted successfully." : "Failed to delete map.");
+        } catch (NumberFormatException e) {
+            System.out.println("Please enter a valid number.");
+        }
     }
 
     private void viewPersonalHistory(PlayerProfile player) {

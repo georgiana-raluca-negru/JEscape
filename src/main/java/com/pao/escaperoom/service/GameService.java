@@ -15,7 +15,7 @@ public class GameService {
         this.scanner = new Scanner(System.in);
     }
 
-    public static GameService getInstance() {
+    public static synchronized GameService getInstance() {
         if (instance == null) {
             instance = new GameService();
         }

@@ -18,7 +18,7 @@ public class MapService {
         loadFromDatabase();
     }
 
-    public static MapService getInstance() {
+    public static synchronized MapService getInstance() {
         if (instance == null) {
             instance = new MapService();
         }

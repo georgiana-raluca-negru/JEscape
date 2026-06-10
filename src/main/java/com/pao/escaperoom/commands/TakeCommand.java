@@ -30,14 +30,14 @@ public class TakeCommand implements Command {
             if(object instanceof ContainerObject container){
                 if(!container.isLocked()){
                     for(Storable content : container.getContents()){
-                        if(content instanceof Item itemToTake){
-                            container.getContents().remove(content);
-                            session.addItemToInventory(itemToTake);
-
-                            return "You took " + itemToTake.getName() + " from the " + content.getName() + ".";
-                        }
-                        else {
-                            return "The " + content.getName() + " is too bulky to carry.";
+                        if(content.getName().equalsIgnoreCase(objectName)){
+                            if(content instanceof Item itemToTake){
+                                container.getContents().remove(content);
+                                session.addItemToInventory(itemToTake);
+                                return "You took " + itemToTake.getName() + " from the " + container.getName() + ".";
+                            } else {
+                                return "The " + content.getName() + " is too bulky to carry.";
+                            }
                         }
                     }
                 }

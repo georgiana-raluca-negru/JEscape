@@ -23,7 +23,7 @@ public class PlayerService {
         loadFromDatabase();
     }
 
-    public static PlayerService getInstance() {
+    public static synchronized PlayerService getInstance() {
         if (instance == null) {
             instance = new PlayerService();
         }
@@ -33,16 +33,28 @@ public class PlayerService {
     private void loadFromDatabase() {
         try {
             List<PlayerProfile> players = PlayerRepository.getInstance().findAll();
-            for (PlayerProfile player : players) {
-                playersByUsername.put(player.getUsername(), player);
-                playersByEmail.put(player.getEmail(), player);
-                GameResultRepository.getInstance()
-                        .findByPlayerId(player.getId())
-                        .forEach(player::addGameResult);
+            if (players.isEmpty()) {
+                seedAdmin();
+            } else {
+                for (PlayerProfile player : players) {
+                    playersByUsername.put(player.getUsername(), player);
+                    playersByEmail.put(player.getEmail(), player);
+                    GameResultRepository.getInstance()
+                            .findByPlayerId(player.getId())
+                            .forEach(player::addGameResult);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Failed to load players from database: " + e.getMessage());
         }
+    }
+
+    private void seedAdmin() throws SQLException {
+        PlayerProfile admin = new PlayerProfile("admin", "admin@escaperoom.com");
+        admin.setTitle(PlayerTitle.VETERAN);
+        PlayerRepository.getInstance().save(admin);
+        playersByUsername.put(admin.getUsername(), admin);
+        playersByEmail.put(admin.getEmail(), admin);
     }
 
     public boolean addPlayer(PlayerProfile player) throws UsernameTakenException, EmailTakenException {
