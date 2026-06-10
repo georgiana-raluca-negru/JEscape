@@ -4,7 +4,7 @@ import com.pao.escaperoom.service.MenuService;
 
 
 public class Main {
-    static void main(String[] args){
+    public static void main(String[] args){
         MenuService menu = new MenuService();
         menu.start();
     }
