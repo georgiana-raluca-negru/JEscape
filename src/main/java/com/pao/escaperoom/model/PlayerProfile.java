@@ -18,7 +18,14 @@ public class PlayerProfile {
         this.email = email;
         this.registrationDate = LocalDate.now();
         this.title = PlayerTitle.ROOKIE;
+        this.gameHistory = new ArrayList<>();
+    }
 
+    public PlayerProfile(String username, String email, LocalDate registrationDate) {
+        this.username = username;
+        this.email = email;
+        this.registrationDate = registrationDate;
+        this.title = PlayerTitle.ROOKIE;
         this.gameHistory = new ArrayList<>();
     }
 

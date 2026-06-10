@@ -73,6 +73,7 @@ public class GameService {
 
     private void endGame(GameSession session, boolean hasEscaped) {
         GameResult result = session.finishGame(hasEscaped);
+        result.setPlayerId(session.getPlayer().getId());
 
         System.out.println("\n=========================================");
         System.out.println("               GAME OVER                 ");

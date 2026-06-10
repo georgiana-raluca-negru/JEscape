@@ -4,8 +4,12 @@ import com.pao.escaperoom.exception.EmailTakenException;
 import com.pao.escaperoom.exception.UsernameTakenException;
 import com.pao.escaperoom.model.PlayerProfile;
 import com.pao.escaperoom.model.PlayerTitle;
+import com.pao.escaperoom.repository.GameResultRepository;
+import com.pao.escaperoom.repository.PlayerRepository;
 
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlayerService {
@@ -13,89 +17,90 @@ public class PlayerService {
     private final Map<String, PlayerProfile> playersByUsername;
     private final Map<String, PlayerProfile> playersByEmail;
 
-    private PlayerService(){
+    private PlayerService() {
         this.playersByUsername = new HashMap<>();
         this.playersByEmail = new HashMap<>();
-        initializePlayers();
+        loadFromDatabase();
     }
 
-    public static PlayerService getInstance(){
-        if(instance == null){
+    public static PlayerService getInstance() {
+        if (instance == null) {
             instance = new PlayerService();
         }
         return instance;
     }
 
+    private void loadFromDatabase() {
+        try {
+            List<PlayerProfile> players = PlayerRepository.getInstance().findAll();
+            for (PlayerProfile player : players) {
+                playersByUsername.put(player.getUsername(), player);
+                playersByEmail.put(player.getEmail(), player);
+                GameResultRepository.getInstance()
+                        .findByPlayerId(player.getId())
+                        .forEach(player::addGameResult);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to load players from database: " + e.getMessage());
+        }
+    }
+
     public boolean addPlayer(PlayerProfile player) throws UsernameTakenException, EmailTakenException {
-        if (player == null || player.getUsername() == null || player.getEmail() == null){
+        if (player == null || player.getUsername() == null || player.getEmail() == null) {
             return false;
         }
-
-        if(playersByUsername.containsKey(player.getUsername())){
+        if (playersByUsername.containsKey(player.getUsername())) {
             throw new UsernameTakenException(player.getUsername());
         }
-
-        if(playersByEmail.containsKey(player.getEmail())){
+        if (playersByEmail.containsKey(player.getEmail())) {
             throw new EmailTakenException(player.getEmail());
+        }
+
+        try {
+            PlayerRepository.getInstance().save(player);
+        } catch (SQLException e) {
+            System.err.println("Failed to save player to database: " + e.getMessage());
+            return false;
         }
 
         playersByUsername.put(player.getUsername(), player);
         playersByEmail.put(player.getEmail(), player);
-
         return true;
     }
 
-    public PlayerProfile findPlayer(String identifier){
-        if(identifier == null || identifier.trim().isEmpty()){
-            return null;
-        }
-
-        if(identifier.contains("@")){
-            return playersByEmail.get(identifier);
-        }
-        else {
-            return playersByUsername.get(identifier);
-        }
+    public PlayerProfile findPlayer(String identifier) {
+        if (identifier == null || identifier.trim().isEmpty()) return null;
+        return identifier.contains("@")
+                ? playersByEmail.get(identifier)
+                : playersByUsername.get(identifier);
     }
 
-    public boolean updatePlayerTitle(String identifier, PlayerTitle newTitle){
+    public boolean updatePlayerTitle(String identifier, PlayerTitle newTitle) {
         PlayerProfile player = findPlayer(identifier);
-
-        if(player == null || newTitle == null){
-            return  false;
-        }
+        if (player == null || newTitle == null) return false;
 
         player.setTitle(newTitle);
+        try {
+            PlayerRepository.getInstance().update(player);
+        } catch (SQLException e) {
+            System.err.println("Failed to update player title in database: " + e.getMessage());
+        }
         return true;
     }
 
-    public boolean deletePlayer(String identifier){
-        PlayerProfile playerToRemove = findPlayer(identifier);
+    public boolean deletePlayer(String identifier) {
+        PlayerProfile player = findPlayer(identifier);
+        if (player == null) return false;
 
-        if(playerToRemove == null){
+        try {
+            PlayerRepository.getInstance().delete(player.getId());
+        } catch (SQLException e) {
+            System.err.println("Failed to delete player from database: " + e.getMessage());
             return false;
         }
 
-        playersByUsername.remove(playerToRemove.getUsername());
-        playersByEmail.remove(playerToRemove.getEmail());
-
+        playersByUsername.remove(player.getUsername());
+        playersByEmail.remove(player.getEmail());
         return true;
     }
-
-
-
-    private void initializePlayers(){
-        PlayerProfile player1 = new PlayerProfile("admin", "admin@escaperoom.com");
-        PlayerProfile player2 = new PlayerProfile("player1", "player1@gmail.com");
-        PlayerProfile player3 = new PlayerProfile("Escapist_Pro", "pro@yahoo.com");
-        playersByUsername.put("admin", player1);
-        playersByUsername.put("player1", player2);
-        playersByUsername.put("Escapist_pro", player3);
-
-        playersByEmail.put("admin@escaperoom.com", player1);
-        playersByEmail.put("player1@gmail.com", player2);
-        playersByEmail.put("pro@yahoo.com", player3);
-
-    }
-
 }

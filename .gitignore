@@ -30,3 +30,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Secrets ###
+src/main/resources/db.properties

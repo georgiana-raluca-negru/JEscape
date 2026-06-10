@@ -1,19 +1,32 @@
 package com.pao.escaperoom.db;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/jescape";
-    private static final String USER = "jescape_user";
-    private static final String PASSWORD = "jescape_password";
-
     private static DatabaseConnection instance;
     private Connection connection;
 
     private DatabaseConnection() throws SQLException {
-        this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        Properties props = new Properties();
+        try (InputStream input = DatabaseConnection.class
+                .getClassLoader().getResourceAsStream("db.properties")) {
+            if (input == null) {
+                throw new RuntimeException("db.properties not found in classpath");
+            }
+            props.load(input);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load db.properties", e);
+        }
+        this.connection = DriverManager.getConnection(
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password")
+        );
     }
 
     public static DatabaseConnection getInstance() throws SQLException {
