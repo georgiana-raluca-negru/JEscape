@@ -1,6 +1,7 @@
 package com.pao.escaperoom.model;
 
 public abstract class GameObject {
+    protected int id;
     protected String name;
     protected String description;
 
@@ -8,6 +9,9 @@ public abstract class GameObject {
         this.name = name;
         this.description = description;
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getName() {
         return name;

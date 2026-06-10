@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Location {
+    private int id;
+    private int mapId;
     private String name;
     private String description;
 
@@ -19,6 +21,12 @@ public class Location {
         this.exits = new HashMap<>();
         this.visibleObjects = new ArrayList<>();
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public int getMapId() { return mapId; }
+    public void setMapId(int mapId) { this.mapId = mapId; }
 
     public void addObject(GameObject object){
         this.visibleObjects.add(object);

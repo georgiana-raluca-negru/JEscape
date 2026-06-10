@@ -1,6 +1,7 @@
 package com.pao.escaperoom.model;
 
 public final class GameResult implements Comparable<GameResult> {
+    private int id;
     private final String playerName;
     private final String mapName;
     private final Difficulty difficulty;
@@ -60,6 +61,9 @@ public final class GameResult implements Comparable<GameResult> {
                 calculatePoints()
         );
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getPlayerName() {
         return playerName;

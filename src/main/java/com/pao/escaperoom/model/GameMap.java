@@ -6,6 +6,7 @@ import java.util.Map;
 
 
 public final class GameMap {
+    private int id;
     private final String name;
     private final String description;
 
@@ -19,6 +20,9 @@ public final class GameMap {
         this.locations = new ArrayList<>(locations);
         this.startingLocation = startingLocation;
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public Location getStartingLocation() {
         return startingLocation;

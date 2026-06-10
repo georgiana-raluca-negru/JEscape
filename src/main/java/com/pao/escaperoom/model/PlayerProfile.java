@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerProfile {
+    private int id;
     private final String username;
     private final String email;
     private PlayerTitle title;
@@ -20,6 +21,9 @@ public class PlayerProfile {
 
         this.gameHistory = new ArrayList<>();
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public List<GameResult> getGameHistory() {
         return new ArrayList<>(this.gameHistory);
